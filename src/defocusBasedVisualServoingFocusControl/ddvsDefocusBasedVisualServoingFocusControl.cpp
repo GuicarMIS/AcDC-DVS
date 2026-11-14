@@ -3,7 +3,7 @@
 #include <sensor_msgs/image_encodings.hpp>
 #include <opencv2/opencv.hpp>
 
-#define WITH_UNDISTORT
+//#define WITH_UNDISTORT
 
 ddvsDefocusBasedVisualServoingFocusControl::ddvsDefocusBasedVisualServoingFocusControl():Node("DefocusDirectVisualServoing")
 
@@ -155,7 +155,7 @@ ddvsDefocusBasedVisualServoingFocusControl::ddvsDefocusBasedVisualServoingFocusC
     std::cout << "Old f, u0 and v0 = " << f_ << " " << u0_ << " " << v0_ << std::endl;
 #ifdef WITH_UNDISTORT
     //extract novel f_, u0_ and v0_, keeping ku_ unchanged
-    f_ = newCameraMatrix.at<double>(0,0)*ku_;//*0.1;
+    f_ = newCameraMatrix.at<double>(0,0)*ku_*0.1;
     u0_ = newCameraMatrix.at<double>(0,2);
     v0_ = newCameraMatrix.at<double>(1,2);
 #endif
@@ -225,6 +225,8 @@ void ddvsDefocusBasedVisualServoingFocusControl::init()
     twist_msg_.angular.z = 0.0;
     twist_pub_->publish(twist_msg_);
     //p_init_.data.clear();
+    v_.data={0.0,0.0,0.0,0.0,0.0,0.0};
+	vel_pub_->publish(v_);
 
 }
 //void ddvsDefocusBasedVisualServoingFocusControl::binning(const vpImage<unsigned char>& src, vpImage<unsigned char>& dst, int binningFactor)
@@ -295,12 +297,21 @@ void ddvsDefocusBasedVisualServoingFocusControl::imageCallback(const sensor_msgs
                 v_temp_ = -dof_*L.pseudoInverse()*getError(sI, sId);
                 //v_temp_ = Servo.computeControlLaw();
                 //std::cout<<"control law processing time per frame = "<< vpTime::measureTimeMs() - duration1 <<std::endl;
-                // v_.data.push_back(lambda_*v_temp_[0]);
-                // v_.data.push_back(lambda_*v_temp_[1]);
-                // v_.data.push_back(lambda_*v_temp_[2]);
-                // v_.data.push_back(lambda_*v_temp_[3]);
-                // v_.data.push_back(lambda_*v_temp_[4]);
-                // v_.data.push_back(lambda_*v_temp_[5]);
+                 /*v_.data.push_back(lambda_*v_temp_[0]);
+                 v_.data.push_back(lambda_*v_temp_[1]);
+                 v_.data.push_back(lambda_*v_temp_[2]);
+                 v_.data.push_back(lambda_*v_temp_[3]);
+                 v_.data.push_back(lambda_*v_temp_[4]);
+                 v_.data.push_back(lambda_*v_temp_[5]);*/
+                 v_.data.push_back(v_temp_[0]);
+                 v_.data.push_back(v_temp_[1]);
+                 v_.data.push_back(v_temp_[2]);
+                 v_.data.push_back(v_temp_[3]);
+                 v_.data.push_back(v_temp_[4]);
+                 v_.data.push_back(v_temp_[5]);
+
+                 vel_pub_->publish(v_);
+
                 twist_msg_.linear.x = v_temp_[0];
                 twist_msg_.linear.y = v_temp_[1];
                 twist_msg_.linear.z = v_temp_[2];
@@ -309,6 +320,9 @@ void ddvsDefocusBasedVisualServoingFocusControl::imageCallback(const sensor_msgs
                 twist_msg_.angular.z =v_temp_[5];
                 
                 twist_pub_->publish(twist_msg_);
+
+                
+
 
                 dZf_= 0.5*v_temp_[6];
                 
@@ -546,8 +560,8 @@ void ddvsDefocusBasedVisualServoingFocusControl::stopRobot()
     twist_msg_.angular.y = 0;
     twist_msg_.angular.z = 0;
     twist_pub_->publish(twist_msg_);
-    // v_.data={0.0,0.0,0.0,0.0,0.0,0.0};
-	//velocity_pub_->publish(velocity_);
+    v_.data={0.0,0.0,0.0,0.0,0.0,0.0};
+	vel_pub_->publish(v_);
 }
 
 vpImage<unsigned char> ddvsDefocusBasedVisualServoingFocusControl::toVispImage(const sensor_msgs::msg::Image & src)

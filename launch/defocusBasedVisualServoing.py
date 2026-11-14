@@ -6,7 +6,7 @@ from launch.substitutions import PathJoinSubstitution, EnvironmentVariable
 
 def generate_launch_description():
     return LaunchDescription([
-        DeclareLaunchArgument('robot_ip', default_value= "192.168.1.3", description="robot ip"),
+        DeclareLaunchArgument('robot_ip', default_value= "192.168.1.7", description="robot ip"),
         DeclareLaunchArgument('Image_topic', default_value= "Camera/Image", description="Name of the image topic"),
         DeclareLaunchArgument('Current_focus_topic', default_value= "/camera/Current_focus", description="Name of the topic that carries the current value of focus"),
         DeclareLaunchArgument('current_camera_position', default_value= "/camera/Current_pos", description="Name of the topic that carries the current camera position"),

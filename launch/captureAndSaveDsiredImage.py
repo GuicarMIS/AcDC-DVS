@@ -7,7 +7,7 @@ from launch.substitutions import PathJoinSubstitution, EnvironmentVariable
 def generate_launch_description():
     return LaunchDescription([
 
-        DeclareLaunchArgument('robot_ip', default_value= "192.168.1.3", description="robot ip"),
+        DeclareLaunchArgument('robot_ip', default_value= "192.168.1.7", description="robot ip"),
         DeclareLaunchArgument('Image_topic', default_value= "Camera/Image", description="Name of the image topic"),
         DeclareLaunchArgument('Current_focus_topic', default_value= "camera/Current_focus", description="Name of the topic that carries the current value of focus"),
         DeclareLaunchArgument('joint_topic', default_value= "cmd/joint", description="Name of the topic that carries the topic of the joint position at the desired position"),
@@ -34,20 +34,20 @@ def generate_launch_description():
         DeclareLaunchArgument('p2', default_value= "-0.001615023936", description="y tangential distortion"),
 
 
-        DeclareLaunchArgument('J1', default_value= "79.03", description="Joint position at desired position"),
-        DeclareLaunchArgument('J2', default_value= "-10.30", description="Joint position at desired position"),
-        DeclareLaunchArgument('J3', default_value= "55.89", description="Joint position at desired position"),
-        DeclareLaunchArgument('J4', default_value= "-229.74", description="Joint position at desired position"),
-        DeclareLaunchArgument('J5', default_value= "-95.46", description="Joint position at desired position"),
-        DeclareLaunchArgument('J6', default_value= "88.55", description="Joint position at desired position"),   
+        #DeclareLaunchArgument('J1', default_value= "79.03", description="Joint position at desired position"),
+        #DeclareLaunchArgument('J2', default_value= "-10.30", description="Joint position at desired position"),
+        #DeclareLaunchArgument('J3', default_value= "55.89", description="Joint position at desired position"),
+        #DeclareLaunchArgument('J4', default_value= "-229.74", description="Joint position at desired position"),
+        #DeclareLaunchArgument('J5', default_value= "-95.46", description="Joint position at desired position"),
+        #DeclareLaunchArgument('J6', default_value= "88.55", description="Joint position at desired position"),   
         
-        # #6dof
-        # DeclareLaunchArgument('J1', default_value= "42.69", description="Joint position at desired position"),
-        # DeclareLaunchArgument('J2', default_value= "-103.65", description="Joint position at desired position"),
-        # DeclareLaunchArgument('J3', default_value= "143.75", description="Joint position at desired position"),
-        # DeclareLaunchArgument('J4', default_value= "-131.41", description="Joint position at desired position"),
-        # DeclareLaunchArgument('J5', default_value= "-87.61", description="Joint position at desired position"),
-        # DeclareLaunchArgument('J6', default_value= "51.74", description="Joint position at desired position"),
+        #6dof
+        DeclareLaunchArgument('J1', default_value= "42.69", description="Joint position at desired position"),
+        DeclareLaunchArgument('J2', default_value= "-103.65", description="Joint position at desired position"),
+        DeclareLaunchArgument('J3', default_value= "143.75", description="Joint position at desired position"),
+        DeclareLaunchArgument('J4', default_value= "-131.41", description="Joint position at desired position"),
+        DeclareLaunchArgument('J5', default_value= "-87.61", description="Joint position at desired position"),
+        DeclareLaunchArgument('J6', default_value= "51.74", description="Joint position at desired position"),
 
         #initial error along Z
         # DeclareLaunchArgument('J1', default_value= "51.42", description="Joint position at desired position"),

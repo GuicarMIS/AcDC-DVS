@@ -6,7 +6,7 @@ from launch.substitutions import PathJoinSubstitution, EnvironmentVariable
 
 def generate_launch_description():
     return LaunchDescription([
-        DeclareLaunchArgument('robot_ip', default_value= "192.168.1.3", description="robot ip"),
+        DeclareLaunchArgument('robot_ip', default_value= "192.168.1.7", description="robot ip"),
         DeclareLaunchArgument('Image_topic', default_value= "Camera/Image", description="Name of the image topic"),
         DeclareLaunchArgument('Current_focus_topic', default_value= "/camera/Current_focus", description="Name of the topic that carries the current value of focus"),
         DeclareLaunchArgument('current_camera_position', default_value= "/camera/Current_pos", description="Name of the topic that carries the current camera position"),
@@ -27,26 +27,26 @@ def generate_launch_description():
         DeclareLaunchArgument('Lambda', default_value= "1.", description="Proportional value"),
         DeclareLaunchArgument('Lambda_zf', default_value= "60.0", description="Proportional value for robot steps"),
 #calibrated parameters (to be used with #define WITH_UNDISTORT)
-        DeclareLaunchArgument('focal', default_value= "0.005022734", description="Focal length"),
-        DeclareLaunchArgument('pixelSize', default_value= "0.0000022", description="physical size of a pixel"),
-        DeclareLaunchArgument('u0', default_value= "174.1776816", description="principal point"),
-        DeclareLaunchArgument('v0', default_value= "76.85743497", description="principal point"),
-        DeclareLaunchArgument('k1', default_value= "-0.4292138945", description="pow 2 radial distortion"),
-        DeclareLaunchArgument('k2', default_value= "0.1576806274", description="pow 4 radial distortion"),
-        DeclareLaunchArgument('k3', default_value= "-0.0789708125", description="pow 6 radial distortion"),
-        DeclareLaunchArgument('p1', default_value= "0.003760092956", description="x tangential distortion"),
-        DeclareLaunchArgument('p2', default_value= "-0.001615023936", description="y tangential distortion"),
+#        DeclareLaunchArgument('focal', default_value= "0.005022734", description="Focal length"),
+ #       DeclareLaunchArgument('pixelSize', default_value= "0.0000022", description="physical size of a pixel"),
+  #      DeclareLaunchArgument('u0', default_value= "174.1776816", description="principal point"),
+   #     DeclareLaunchArgument('v0', default_value= "76.85743497", description="principal point"),
+    #    DeclareLaunchArgument('k1', default_value= "-0.4292138945", description="pow 2 radial distortion"),
+     #   DeclareLaunchArgument('k2', default_value= "0.1576806274", description="pow 4 radial distortion"),
+      #  DeclareLaunchArgument('k3', default_value= "-0.0789708125", description="pow 6 radial distortion"),
+       # DeclareLaunchArgument('p1', default_value= "0.003760092956", description="x tangential distortion"),
+        #DeclareLaunchArgument('p2', default_value= "-0.001615023936", description="y tangential distortion"),
 
 #Belinda's parameters (to be used without #define WITH_UNDISTORT)
-#        DeclareLaunchArgument('focal', default_value= "0.0005", description="Focal length"),
- #       DeclareLaunchArgument('pixelSize', default_value= "0.0000022", description="physical size of a pixel"),
-  #      DeclareLaunchArgument('u0', default_value= "160.0", description="principal point"),
-   #     DeclareLaunchArgument('v0', default_value= "90.0", description="principal point"),
-    #    DeclareLaunchArgument('k1', default_value= "0.0", description="pow 2 radial distortion"),
-     #   DeclareLaunchArgument('k2', default_value= "0.0", description="pow 4 radial distortion"),
-      #  DeclareLaunchArgument('k3', default_value= "0.0", description="pow 6 radial distortion"),
-       # DeclareLaunchArgument('p1', default_value= "0.0", description="x tangential distortion"),
-        #DeclareLaunchArgument('p2', default_value= "0.0", description="y tangential distortion"),
+        DeclareLaunchArgument('focal', default_value= "0.0005", description="Focal length"),
+        DeclareLaunchArgument('pixelSize', default_value= "0.0000022", description="physical size of a pixel"),
+        DeclareLaunchArgument('u0', default_value= "160.0", description="principal point"),
+        DeclareLaunchArgument('v0', default_value= "90.0", description="principal point"),
+        DeclareLaunchArgument('k1', default_value= "0.0", description="pow 2 radial distortion"),
+        DeclareLaunchArgument('k2', default_value= "0.0", description="pow 4 radial distortion"),
+        DeclareLaunchArgument('k3', default_value= "0.0", description="pow 6 radial distortion"),
+        DeclareLaunchArgument('p1', default_value= "0.0", description="x tangential distortion"),
+        DeclareLaunchArgument('p2', default_value= "0.0", description="y tangential distortion"),
 
         DeclareLaunchArgument('sceneDepth', default_value= "0.22", description="Depth of the scene"),
         DeclareLaunchArgument('FNumber', default_value= "2.5", description="Lens aperture"),
@@ -54,9 +54,9 @@ def generate_launch_description():
         DeclareLaunchArgument('tx', default_value= "true", description="Translation along X-axis"),
         DeclareLaunchArgument('ty', default_value= "true", description="Translation along y-axis"),
         DeclareLaunchArgument('tz', default_value= "true", description="Translation along z-axis"),
-        DeclareLaunchArgument('rx', default_value= "false", description="rotation along X-axis"),
+        DeclareLaunchArgument('rx', default_value= "true", description="rotation along X-axis"),
         DeclareLaunchArgument('ry', default_value= "true", description="rotation along y-axis"),
-        DeclareLaunchArgument('rz', default_value= "false", description="rotation along z-axis"),
+        DeclareLaunchArgument('rz', default_value= "true", description="rotation along z-axis"),
 
         
 
@@ -116,7 +116,8 @@ def generate_launch_description():
                           ('camera_velocity_topic','cmd/camera_velocity')],
 
             parameters=[{'relative_pos_topic': LaunchConfiguration('relative_pos_topic'),
-                        'camera_velocity_topic': LaunchConfiguration('camera_velocity_topic'),}],
+                        'camera_velocity_topic': LaunchConfiguration('camera_velocity_topic'),
+                        'robot_ip': LaunchConfiguration('robot_ip')}],
             output     = 'screen'
         ),
 #        Node(

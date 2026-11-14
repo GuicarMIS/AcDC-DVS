@@ -4,7 +4,6 @@
 #include "rclcpp/rclcpp.hpp"
 #include "image_transport/image_transport.hpp"
 #include "sensor_msgs/msg/image.hpp"
-#include "visp_bridge/image.h"
 #include <visp/vpIoTools.h>
 #include <visp/vpImageIo.h>
 #include <tf2_msgs/msg/tf_message.hpp>
@@ -18,10 +17,11 @@
 #include <std_msgs/msg/float64.hpp>
 #include <visp3/core/vpImageTools.h>
 #include "geometry_msgs/msg/twist.hpp"
-#include <../Robot/C_UR.h>
+#include "../../Robot/C_UR.h"
 
 
 using namespace std;
+using namespace visp;
 
 class ddvsDefocusBasedVisualServoing:public rclcpp::Node
 {
@@ -37,6 +37,10 @@ class ddvsDefocusBasedVisualServoing:public rclcpp::Node
         int errorToImage(vpColVector &e, vpImage<unsigned char> &diff_image);
         //void binning(const vpImage<unsigned char>& src, vpImage<unsigned char>& dst, int binningFactor);
         void stopRobot();
+
+        vpImage<unsigned char> toVispImage(const sensor_msgs::msg::Image & src);
+        sensor_msgs::msg::Image toSensorMsgsImage(const vpImage<unsigned char> & src);
+
 
     private:
 

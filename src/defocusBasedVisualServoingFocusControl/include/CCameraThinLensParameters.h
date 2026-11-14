@@ -13,6 +13,8 @@
 #include <visp/vpCameraParameters.h>
 #include <visp/vpColVector.h>
 
+using namespace visp;
+
 class CCameraThinLensParameters : public vpCameraParameters
 {
   //generic functions

@@ -23,6 +23,16 @@ def generate_launch_description():
         DeclareLaunchArgument('Auto_focus', default_value= "true", description="Activating/deactivating autofocus mode"),
         DeclareLaunchArgument('endTopic', default_value= "/autofocus", description="Activating/deactivating autofocus topic"),
 
+        DeclareLaunchArgument('focal', default_value= "0.005022734", description="Focal length"),
+        DeclareLaunchArgument('pixelSize', default_value= "0.0000022", description="physical size of a pixel"),
+        DeclareLaunchArgument('u0', default_value= "174.1776816", description="principal point"),
+        DeclareLaunchArgument('v0', default_value= "76.85743497", description="principal point"),
+        DeclareLaunchArgument('k1', default_value= "-0.4292138945", description="pow 2 radial distortion"),
+        DeclareLaunchArgument('k2', default_value= "0.1576806274", description="pow 4 radial distortion"),
+        DeclareLaunchArgument('k3', default_value= "-0.0789708125", description="pow 6 radial distortion"),
+        DeclareLaunchArgument('p1', default_value= "0.003760092956", description="x tangential distortion"),
+        DeclareLaunchArgument('p2', default_value= "-0.001615023936", description="y tangential distortion"),
+
 
         DeclareLaunchArgument('J1', default_value= "79.03", description="Joint position at desired position"),
         DeclareLaunchArgument('J2', default_value= "-10.30", description="Joint position at desired position"),
@@ -84,17 +94,17 @@ def generate_launch_description():
                         'endTopic': LaunchConfiguration('endTopic')}],
             output     = 'screen'
         ),
-        Node(
-            package    = "ur_control",
-            namespace  = "",
-            executable = "ur_control_node",
-            name       = "control_node",
-            remappings = [("joint_topic", "cmd/joint")],
-
-            parameters=[{'joint_topic': LaunchConfiguration('joint_topic'),
-                         'robot_ip': LaunchConfiguration('robot_ip')}],
-            output     = 'screen'
-        ),
+#        Node(
+#            package    = "ur_control",
+#            namespace  = "",
+#            executable = "ur_control_node",
+ #           name       = "control_node",
+  #          remappings = [("joint_topic", "cmd/joint")],
+#
+#            parameters=[{'joint_topic': LaunchConfiguration('joint_topic'),
+ #                        'robot_ip': LaunchConfiguration('robot_ip')}],
+  #          output     = 'screen'
+   #     ),
         
         TimerAction(
             period=2.0,
@@ -108,6 +118,18 @@ def generate_launch_description():
                 parameters=[{'Image_topic': LaunchConfiguration('Image_topic'),
                              'joint_topic': LaunchConfiguration('joint_topic'),
                              'Log_folder': LaunchConfiguration('Log_folder'),
+                             'u0': LaunchConfiguration('u0'),
+                             'v0': LaunchConfiguration('v0'),
+                             'focal': LaunchConfiguration('focal'),
+                             'pixelSize': LaunchConfiguration('pixelSize'),
+                             'binning': LaunchConfiguration('binning'),
+                             'Height': LaunchConfiguration('Height'),
+                             'Width': LaunchConfiguration('Width'),
+                             'k1': LaunchConfiguration('k1'),
+                             'k2': LaunchConfiguration('k2'),
+                             'k3': LaunchConfiguration('k3'),
+                             'p1': LaunchConfiguration('p1'),
+                             'p2': LaunchConfiguration('p2'),
                              'J1': LaunchConfiguration('J1'),
                              'J2': LaunchConfiguration('J2'),
                              'J3': LaunchConfiguration('J3'),

@@ -21,9 +21,13 @@ if(POLICY CMP0167)
 endif()
 
 find_package(Boost REQUIRED COMPONENTS system thread)
-find_package(visp_bridge REQUIRED)
+#find_package(visp_bridge REQUIRED)
 find_package(VISP REQUIRED io)
 find_package(VISP REQUIRED)
+if(VISP_FOUND)
+  include(${VISP_USE_FILE})
+endif()
+
 find_package(tf2_msgs REQUIRED)
 
 find_package(ur_rtde REQUIRED)
@@ -40,11 +44,11 @@ include_directories(
 add_executable(CaptureAndSaveDesiredImage src/captureAndSaveDesired/captureAndSaveDesired.cpp src/captureAndSaveDesired/DesiredImageManager.cpp)
 target_link_libraries(CaptureAndSaveDesiredImage
                       ${OpenCV_LIBRARIES} 
-                      visp_io
+                      ${VISP_LIBRARIES}
                       C_UR
                     )
 
-ament_target_dependencies(CaptureAndSaveDesiredImage rclcpp cv_bridge image_transport visp_bridge)
+ament_target_dependencies(CaptureAndSaveDesiredImage rclcpp cv_bridge image_transport)
 
 target_include_directories(CaptureAndSaveDesiredImage PUBLIC
   $<INSTALL_INTERFACE:include>
@@ -114,8 +118,8 @@ install(TARGETS ${PROJECT_NAME}_ddvsDirectVisualservoing
 install(TARGETS ${PROJECT_NAME}_focusControlDirectVisualservoing
 RUNTIME DESTINATION lib/${PROJECT_NAME})
                     
-ament_target_dependencies(${PROJECT_NAME}_ddvsDirectVisualservoing rclcpp tf2_msgs cv_bridge image_transport visp_bridge )
-ament_target_dependencies(${PROJECT_NAME}_focusControlDirectVisualservoing rclcpp tf2_msgs cv_bridge image_transport visp_bridge )
+ament_target_dependencies(${PROJECT_NAME}_ddvsDirectVisualservoing rclcpp tf2_msgs cv_bridge image_transport  )
+ament_target_dependencies(${PROJECT_NAME}_focusControlDirectVisualservoing rclcpp tf2_msgs cv_bridge image_transport  )
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights

@@ -28,6 +28,8 @@
 #include <visp/vpMatrix.h>
 #include <visp/vpMath.h>
 
+using namespace visp;
+
 /*!
   \class CImageFilter
 

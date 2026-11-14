@@ -10,6 +10,7 @@
 #include <ur_rtde/rtde_receive_interface.h>
 
 using namespace ur_rtde;
+using namespace visp;
 
 class C_UR
 {

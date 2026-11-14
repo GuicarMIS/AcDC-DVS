@@ -18,6 +18,8 @@
 
 #include "CCameraThinLensParameters.h"
 
+using namespace visp;
+
 /*!
   \class CDefocusedLuminance
   \brief Class that defines the defocused luminance, gradient and Laplacian of a point

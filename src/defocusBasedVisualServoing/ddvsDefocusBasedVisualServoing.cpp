@@ -1,5 +1,7 @@
 #include "ddvsDefocusBasedVisualServoing.h"
 
+#include <sensor_msgs/image_encodings.hpp>
+
 
 ddvsDefocusBasedVisualServoing::ddvsDefocusBasedVisualServoing():Node("DefocusDirectVisualServoing")
 {
@@ -192,7 +194,8 @@ void ddvsDefocusBasedVisualServoing::imageCallback(const sensor_msgs::msg::Image
             double duration = vpTime::measureTimeMs();
         
             
-            current_image_ = visp_bridge::toVispImage(*msg);
+            //current_image_ = visp_bridge::toVispImage(*msg);
+            current_image_ = toVispImage(*msg);
             //binning(current_image_temp_, current_image_,8);
             //vpImageTools::resize(current_image_temp_, current_image_, current_image_temp_.getWidth()/8, current_image_temp_.getHeight()/8, vpImageTools::INTERPOLATION_LINEAR );
             if((current_image_.getHeight() == height_) && (current_image_.getWidth() == width_))
@@ -234,7 +237,8 @@ void ddvsDefocusBasedVisualServoing::imageCallback(const sensor_msgs::msg::Image
                 {
       	            if(errorToImage(e, difference_image_) == 0)
       	            {
-      		            diff_ = visp_bridge::toSensorMsgsImage(difference_image_);
+      		            //diff_ = visp_bridge::toSensorMsgsImage(difference_image_);
+                        diff_ = toSensorMsgsImage(difference_image_);
       		            diff_pub_.publish(diff_);
       	            }
 			    }
@@ -403,4 +407,51 @@ void ddvsDefocusBasedVisualServoing::stopRobot()
     twist_pub_->publish(twist_msg_);
     // v_=0;
 	//velocity_pub_->publish(velocity_);
+}
+
+vpImage<unsigned char> ddvsDefocusBasedVisualServoing::toVispImage(const sensor_msgs::msg::Image & src)
+{
+  using sensor_msgs::image_encodings::BGR8;
+  using sensor_msgs::image_encodings::BGRA8;
+  using sensor_msgs::image_encodings::MONO8;
+  using sensor_msgs::image_encodings::RGB8;
+  using sensor_msgs::image_encodings::RGBA8;
+
+  vpImage<unsigned char> dst(src.height, src.width);
+
+  std::cout << src.encoding << std::endl;
+
+  if(src.encoding == sensor_msgs::image_encodings::MONO8)
+    memcpy(dst.bitmap, &(src.data[0]), dst.getHeight() * src.step * sizeof(unsigned char));
+  else if(src.encoding == sensor_msgs::image_encodings::RGB8 || src.encoding == RGBA8
+          || src.encoding == sensor_msgs::image_encodings::BGR8 || src.encoding == sensor_msgs::image_encodings::BGRA8)
+  {
+    unsigned nc = sensor_msgs::image_encodings::numChannels(src.encoding);
+    unsigned cEnd = (src.encoding == RGBA8 || src.encoding == sensor_msgs::image_encodings::BGRA8) ? nc - 1 : nc;
+
+    for(unsigned i = 0; i < dst.getWidth(); ++i)
+    {
+      for(unsigned j = 0; j < dst.getHeight(); ++j)
+      {
+        int acc = 0;
+        for(unsigned c = 0; c < cEnd; ++c) acc += src.data[j * src.step + i * nc + c];
+        dst[j][i] = acc / nc;
+      }
+    }
+  }
+  return dst;
+}
+
+sensor_msgs::msg::Image
+ddvsDefocusBasedVisualServoing::toSensorMsgsImage(const vpImage<unsigned char> &src) {
+  sensor_msgs::msg::Image dst;
+  dst.width = src.getWidth();
+  dst.height = src.getHeight();
+  dst.encoding = sensor_msgs::image_encodings::MONO8;
+  dst.step = src.getWidth();
+  dst.data.resize(dst.height * dst.step);
+  memcpy(&dst.data[0], src.bitmap,
+         dst.height * dst.step * sizeof(unsigned char));
+
+  return dst;
 }

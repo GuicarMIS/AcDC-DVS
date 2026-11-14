@@ -54,8 +54,11 @@ class ddvsDefocusBasedVisualServoing:public rclcpp::Node
         double Zf_;
         double f_;
         double ku_;
+        double k1_,k2_,k3_;
+        double p1_,p2_;
         bool tx_,ty_,tz_,rx_,ry_,rz_;
         int binning_val_;
+        int Height_, Width_;
         string cameraTopic_;
         string robotTopic_;
         string cameraPoseTopic_;
@@ -69,6 +72,13 @@ class ddvsDefocusBasedVisualServoing:public rclcpp::Node
         std::string vel_topic_;
         std::string twist_topic_;
         unsigned int height_, width_;
+
+        cv::Mat cameraMatrix;
+        cv::Mat distCoeffs;
+        cv::Rect validRoi;
+        double alpha; // 0 = crop all black borders, 1 = keep all pixels
+        cv::Mat newCameraMatrix;
+
         image_transport::Subscriber sub_;
         image_transport::Publisher diff_pub_;
         rclcpp::Subscription<tf2_msgs::msg::TFMessage>::SharedPtr camPose_sub_;

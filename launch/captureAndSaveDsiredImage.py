@@ -94,17 +94,17 @@ def generate_launch_description():
                         'endTopic': LaunchConfiguration('endTopic')}],
             output     = 'screen'
         ),
-#        Node(
-#            package    = "ur_control",
-#            namespace  = "",
-#            executable = "ur_control_node",
- #           name       = "control_node",
-  #          remappings = [("joint_topic", "cmd/joint")],
-#
-#            parameters=[{'joint_topic': LaunchConfiguration('joint_topic'),
- #                        'robot_ip': LaunchConfiguration('robot_ip')}],
-  #          output     = 'screen'
-   #     ),
+        Node(
+            package    = "ur_control",
+            namespace  = "",
+            executable = "ur_control_node",
+            name       = "control_node",
+            remappings = [("joint_topic", "cmd/joint")],
+
+            parameters=[{'joint_topic': LaunchConfiguration('joint_topic'),
+                         'robot_ip': LaunchConfiguration('robot_ip')}],
+            output     = 'screen'
+        ),
         
         TimerAction(
             period=2.0,

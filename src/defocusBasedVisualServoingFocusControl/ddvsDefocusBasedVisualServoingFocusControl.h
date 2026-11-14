@@ -52,8 +52,11 @@ class ddvsDefocusBasedVisualServoingFocusControl:public rclcpp::Node
         double Zf_;
         double f_;
         double ku_;
+        double k1_,k2_,k3_;
+        double p1_,p2_;
         bool tx_,ty_,tz_,rx_,ry_,rz_;
         int binning_val_;
+        int Height_, Width_;
         string cameraTopic_;
         string robotTopic_;
         string cameraPoseTopic_;
@@ -72,6 +75,13 @@ class ddvsDefocusBasedVisualServoingFocusControl:public rclcpp::Node
 
 
         unsigned int height_, width_;
+
+        cv::Mat cameraMatrix;
+        cv::Mat distCoeffs;
+        cv::Rect validRoi;
+        double alpha; // 0 = crop all black borders, 1 = keep all pixels
+        cv::Mat newCameraMatrix;
+        
         image_transport::Subscriber sub_;
         image_transport::Publisher diff_pub_;
         image_transport::Publisher id_pub_;

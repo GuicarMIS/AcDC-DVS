@@ -75,7 +75,7 @@ DesiredImageManager::DesiredImageManager():Node("CaptureAndSaveDesiredImage")
     if (ku_>0)
         px_ = py_ = f_/ku_;
     else 
-    px_ = py_ = f_;
+        px_ = py_ = f_;
 
     // 3x3 Camera Matrix [fx 0 cx; 0 fy cy; 0 0 1]
     cameraMatrix = (cv::Mat_<double>(3, 3) << 

@@ -1,7 +1,7 @@
 #include "ddvsDefocusBasedVisualServoing.h"
 
 #include <sensor_msgs/image_encodings.hpp>
-
+#include <opencv2/opencv.hpp>
 
 ddvsDefocusBasedVisualServoing::ddvsDefocusBasedVisualServoing():Node("DefocusDirectVisualServoing")
 {
@@ -42,6 +42,22 @@ this->declare_parameter<std::string>("Image_topic", "currentImage");
 
     this->declare_parameter<double>("v0", double(1.0));
     v0_ = this->get_parameter("v0").as_double();
+
+    this->declare_parameter<double>("k1", double(0.0));
+    k1_ = this->get_parameter("k1").as_double();
+
+    this->declare_parameter<double>("k2", double(0.0));
+    k2_ = this->get_parameter("k2").as_double();
+
+    this->declare_parameter<double>("k3", double(0.0));
+    k3_ = this->get_parameter("k3").as_double();
+
+    this->declare_parameter<double>("p1", double(0.0));
+    p1_ = this->get_parameter("p1").as_double();
+
+    this->declare_parameter<double>("p2", double(0.0));
+    p2_ = this->get_parameter("p2").as_double();
+
 
     this->declare_parameter<double>("sceneDepth", double(1.0));
     sceneDepth_ = this->get_parameter("sceneDepth").as_double();
@@ -94,14 +110,46 @@ this->declare_parameter<std::string>("Image_topic", "currentImage");
     this->declare_parameter<double>("drZ", 0.0);
     p_init_.data.push_back(vpMath::rad(this->get_parameter("drZ").as_double()));
 
+    this->declare_parameter<int>("Height", false);
+    Height_ = this->get_parameter("Height").as_int();
+
+    this->declare_parameter<int>("Width", false);
+    Width_ = this->get_parameter("Width").as_int();
+
     this->declare_parameter<int>("binning", false);
     binning_val_ = this->get_parameter("binning").as_int();
+
+    Height_ /= binning_val_;
+    Width_ /= binning_val_;
+
     ku_ = binning_val_*ku_;
     if (ku_>0)
         px_ = py_ = f_/ku_;
     else 
-    px_ = py_ = f_;
+        px_ = py_ = f_;
 
+    // 3x3 Camera Matrix [fx 0 cx; 0 fy cy; 0 0 1]
+    cameraMatrix = (cv::Mat_<double>(3, 3) << 
+        px_,   0.0, u0_,
+          0.0, py_, v0_,
+          0.0,   0.0,   1.0);
+
+    // Distortion Coefficients [k1, k2, p1, p2, k3]
+    distCoeffs = (cv::Mat_<double>(1, 5) << k1_, k2_, p1_, p2_, k3_);
+
+    alpha = 0.0; // 0 = crop all black borders, 1 = keep all pixels
+
+    // Compute the optimal new camera matrix
+    newCameraMatrix = cv::getOptimalNewCameraMatrix(
+        cameraMatrix, distCoeffs, cv::Size(Width_, Height_), alpha, cv::Size(Width_, Height_), &validRoi
+    );
+
+    //extract novel f_, u0_ and v0_, keeping ku_ unchanged
+    f_ = newCameraMatrix.at<double>(0,0)*ku_;
+    u0_ = newCameraMatrix.at<double>(0,2);
+    v0_ = newCameraMatrix.at<double>(1,2);
+
+    std::cout << "Novel f, u0 and v0 = " << f_ << " " << u0_ << " " << v0_ << std::endl;
 
     iter_ = 0;
     dof_.resize(7,7);
